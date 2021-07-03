@@ -46,7 +46,6 @@ public enum DataTypeEnum {
      */
     public static DataTypeEnum match(String name) {
         DataTypeEnum[] values = DataTypeEnum.values();
-
         return Arrays.stream(values)
                 .filter(item -> item.name.equals(name)).findFirst().orElse(UNKNOWN);
     }
