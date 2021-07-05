@@ -12,14 +12,4 @@ public class MyCacheServerNotFoundException extends AbstractMyCacheException {
         super(errorCode.getErrMsg());
         buildException(errorCode);
     }
-
-    @Override
-    public void buildException(ErrorCode errorCode) {
-        if (null != errorCode.getErrCode()) {
-            this.code = errorCode.getErrCode();
-        }
-        if (null != errorCode.getCause()) {
-            this.cause = errorCode.getCause();
-        }
-    }
 }

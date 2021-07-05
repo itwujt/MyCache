@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MyCacheServerRepo {
     /**
-     * key: dataGroup#ip#wsport#v_random
+     * key: dataGroup#ip#tcpPort#v_random
      * value: server channel
      */
     public static Map<String, Channel> myCacheServerRepo = new ConcurrentHashMap<>(16);

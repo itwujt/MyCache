@@ -14,8 +14,13 @@
     <dependencies>
         <dependency>
             <groupId>com.bestwu.mycache</groupId>
+            <artifactId>mycache-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bestwu.mycache</groupId>
             <artifactId>mycache-tool</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

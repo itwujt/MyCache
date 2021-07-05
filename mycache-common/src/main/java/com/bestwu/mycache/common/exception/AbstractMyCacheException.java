@@ -41,4 +41,14 @@ public abstract class AbstractMyCacheException extends RuntimeException implemen
         super(message);
         this.message = message;
     }
+
+    @Override
+    public void buildException(ErrorCode errorCode) {
+        if (null != errorCode.getErrCode()) {
+            this.code = errorCode.getErrCode();
+        }
+        if (null != errorCode.getCause()) {
+            this.cause = errorCode.getCause();
+        }
+    }
 }
