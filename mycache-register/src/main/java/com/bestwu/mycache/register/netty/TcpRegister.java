@@ -5,12 +5,11 @@ import com.bestwu.mycache.register.netty.handler.RegisterConnectionHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <br>
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
  * @author Best Wu
  * @date 2021/7/4 21:15 <br>
  */
+@Slf4j
 public class TcpRegister implements NettyServer, Register {
 
     private ServerBootstrap serverBootstrap;
@@ -67,7 +67,20 @@ public class TcpRegister implements NettyServer, Register {
 
     @Override
     public void receive() {
-
+        try {
+            this.channelFuture = this.serverBootstrap.bind("127.0.0.1", 9999).sync();
+            log.info("TCP Register open connection!");
+            this.channelFuture.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != this.boss) {
+                this.boss.shutdownGracefully();
+            }
+            if (null != this.worker) {
+                this.worker.shutdownGracefully();
+            }
+        }
     }
 
     /**
@@ -75,7 +88,7 @@ public class TcpRegister implements NettyServer, Register {
      */
     @Override
     public void openConnection() {
-
+        receive();
     }
 
 

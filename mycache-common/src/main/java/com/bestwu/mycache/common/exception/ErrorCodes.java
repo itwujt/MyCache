@@ -13,4 +13,6 @@ public class ErrorCodes {
     public final static ErrorCode REGISTER_REFUSED_ERR_CODE = ErrorCode.builder().errMsg("客户端注册连接被拒绝，可能是被认为无效的参数，请检验你的连接参数是否正确，验证后请重试，如仍连接失败，请联系管理员！邮箱地址：itwujt@sina.com").errCode("REGISTER_REFUSED_ERR_CODE").build();
 
     public final static ErrorCode REGISTER_PACKET_NULL_ERR_CODE = ErrorCode.builder().errMsg("客户端注册连接报文格式异常，请仔细检查，检查后重试，如仍连接失败，请联系管理员！邮箱地址：itwujt@sina.com").errCode("REGISTER_PACKET_NULL_ERR_CODE").build();
+
+    public final static ErrorCode REGISTER_PACKET_PARSE_FAILED_ERR_CODE = ErrorCode.builder().errMsg("客户端注册连接报文格式异常，请仔细检查，检查后重试，如仍连接失败，请联系管理员！邮箱地址：itwujt@sina.com").errCode("REGISTER_PACKET_PARSE_FAILED_ERR_CODE").build();
 }

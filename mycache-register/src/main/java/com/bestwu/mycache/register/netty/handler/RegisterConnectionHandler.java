@@ -1,9 +1,11 @@
 package com.bestwu.mycache.register.netty.handler;
 
+import com.alibaba.fastjson.JSONException;
 import com.bestwu.mycache.common.dto.RegisterPacketDTO;
 import com.bestwu.mycache.common.exception.ErrorCodes;
 import com.bestwu.mycache.common.exception.RegisterConnectionRefusedException;
 import com.bestwu.mycache.common.exception.RegisterPacketNullExeception;
+import com.bestwu.mycache.common.exception.RegisterPacketParseFailedException;
 import com.bestwu.mycache.register.ability.RegisterConnectionCheckable;
 import com.bestwu.mycache.tool.JsonUtil;
 import io.netty.buffer.ByteBuf;
@@ -16,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * <br>
- * TODO 未完成
  * @author Best Wu
  * @date 2021/7/4 21:34 <br>
  */
@@ -26,9 +27,7 @@ public class RegisterConnectionHandler extends SimpleChannelInboundHandler<ByteB
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-        // TODO？检查是否为连接请求
-        RegisterPacketDTO registerPacketDTO = registerConnectionCheck(ctx, msg);
-
+        ctx.fireChannelRead(registerConnectionCheck(ctx, msg));
     }
     /**
      * <p> 规定发来的消息
@@ -44,7 +43,8 @@ public class RegisterConnectionHandler extends SimpleChannelInboundHandler<ByteB
      */
     @Override
     public RegisterPacketDTO registerConnectionCheck(ChannelHandlerContext ctx, ByteBuf msg)
-            throws RegisterConnectionRefusedException, IllegalArgumentException, RegisterPacketNullExeception {
+            throws RegisterConnectionRefusedException, IllegalArgumentException,
+            RegisterPacketNullExeception, RegisterPacketParseFailedException {
         // 1. 对消息的长度有一个校验，初步定 256 Bytes
         final int limit = 256;
         int len = msg.readableBytes();
@@ -54,7 +54,13 @@ public class RegisterConnectionHandler extends SimpleChannelInboundHandler<ByteB
         // 2. 校验报文信息是否合法
         byte[] buf = new byte[len];
         String content = new String(buf, StandardCharsets.UTF_8);
-        RegisterPacketDTO registerPacketDTO = JsonUtil.parseObject(content, RegisterPacketDTO.class);
+        RegisterPacketDTO registerPacketDTO = null;
+        try {
+            registerPacketDTO = JsonUtil.parseObject(content, RegisterPacketDTO.class);
+        } catch (JSONException e) {
+            log.error("Register Server 解析注册报文失败！", e);
+            throw new RegisterPacketParseFailedException(ErrorCodes.REGISTER_PACKET_PARSE_FAILED_ERR_CODE);
+        }
         if (null == registerPacketDTO) {
             throw new RegisterPacketNullExeception(ErrorCodes.REGISTER_PACKET_NULL_ERR_CODE);
         }
@@ -64,9 +70,9 @@ public class RegisterConnectionHandler extends SimpleChannelInboundHandler<ByteB
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        ctx.channel().closeFuture().addListener(future -> {
+        ctx.channel().close().addListener(future -> {
             if (future.isSuccess()) {
-                // TODO LOG
+                // TODO ? 要不要做 判断不同的异常类型
                 log.error("channel:{} 连接已断开", ctx.channel(), cause);
             }
         }).sync();
