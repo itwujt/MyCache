@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @Sharable
-public class RegisterConnectionHandler extends SimpleChannelInboundHandler<ByteBuf> implements RegisterConnectionCheckable<ByteBuf> {
+public class RegisterConnectionRequestHandler extends SimpleChannelInboundHandler<ByteBuf> implements RegisterConnectionCheckable<ByteBuf> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
@@ -72,7 +72,6 @@ public class RegisterConnectionHandler extends SimpleChannelInboundHandler<ByteB
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         ctx.channel().close().addListener(future -> {
             if (future.isSuccess()) {
-                // TODO ? 要不要做 判断不同的异常类型
                 log.error("channel:{} 连接已断开", ctx.channel(), cause);
             }
         }).sync();

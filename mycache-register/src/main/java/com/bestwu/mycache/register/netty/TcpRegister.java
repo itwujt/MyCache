@@ -1,7 +1,9 @@
 package com.bestwu.mycache.register.netty;
 
 import com.bestwu.mycache.register.Register;
-import com.bestwu.mycache.register.netty.handler.RegisterConnectionHandler;
+import com.bestwu.mycache.register.netty.handler.EchoMyCacheServerHandler;
+import com.bestwu.mycache.register.netty.handler.HeartBeatHandler;
+import com.bestwu.mycache.register.netty.handler.RegisterConnectionRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
@@ -9,7 +11,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * <br>
@@ -61,8 +66,15 @@ public class TcpRegister implements NettyServer, Register {
     }
 
     private void initPipeline(ChannelPipeline pipeline) {
+        // 处理大数据流
         pipeline.addLast("streamer", new ChunkedWriteHandler());
-        pipeline.addLast("registerConnectionHandler", new RegisterConnectionHandler());
+        // 处理连接
+        pipeline.addLast("registerConnectionRequestHandler", new RegisterConnectionRequestHandler());
+        pipeline.addLast("echoMyCacheServerHandler", new EchoMyCacheServerHandler());
+        // 处理心跳
+        pipeline.addLast("idleStateHandler", new IdleStateHandler(20L, 40L, 60L, TimeUnit.SECONDS));
+        pipeline.addLast("heartBeatHandler", new HeartBeatHandler());
+
     }
 
     @Override
