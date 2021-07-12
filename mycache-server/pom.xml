@@ -11,5 +11,30 @@
 
     <artifactId>mycache-server</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.bestwu.mycache</groupId>
+            <artifactId>mycache-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bestwu.mycache</groupId>
+            <artifactId>mycache-tool</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

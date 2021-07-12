@@ -1,6 +1,6 @@
 package com.bestwu.mycache.register.netty;
 
-import com.bestwu.mycache.register.Register;
+import com.bestwu.mycache.register.Receiver;
 import com.bestwu.mycache.register.netty.handler.EchoMyCacheServerHandler;
 import com.bestwu.mycache.register.netty.handler.HeartBeatHandler;
 import com.bestwu.mycache.register.netty.handler.RegisterConnectionRequestHandler;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/7/4 21:15 <br>
  */
 @Slf4j
-public class TcpRegister implements NettyServer, Register {
+public class TcpReceiver implements NettyServer, Receiver {
 
     private ServerBootstrap serverBootstrap;
 
@@ -33,7 +33,7 @@ public class TcpRegister implements NettyServer, Register {
 
     private ChannelFuture channelFuture;
 
-    public TcpRegister() {
+    public TcpReceiver() {
         this.serverBootstrap = new ServerBootstrap();
         this.boss = new NioEventLoopGroup();
         this.worker = new NioEventLoopGroup();
