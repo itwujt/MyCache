@@ -7,4 +7,9 @@ package com.bestwu.mycache.server.netty;
  * @date 2021/7/12 23:44 <br>
  */
 public interface NettyClient extends AutoCloseable {
+
+    /**
+     * register to MyCache-Register Server
+     */
+    void registerConnection();
 }

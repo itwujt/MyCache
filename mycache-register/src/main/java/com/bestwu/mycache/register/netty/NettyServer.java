@@ -6,7 +6,7 @@ package com.bestwu.mycache.register.netty;
  * @author Best Wu
  * @date 2021/7/4 20:06 <br>
  */
-public interface NettyServer extends AutoCloseable{
+public interface NettyServer extends AutoCloseable {
     /**
      * open connection
      */
